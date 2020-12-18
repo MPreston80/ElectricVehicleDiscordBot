@@ -57,24 +57,24 @@ function myFunc(){
 //getChargeTime function makes an approximation of the time needed to charge the EV during the trip, based on the model of car. 
 function getChargeTime(){  
   var distToUse = recordChargeTime[0];
-  var worstRate; //A slower rate for charging at level 1 stations. 
+  var worstRate; //A slower rate for charging at level 2 stations. 
   var bestRate; //Fastest rate the vehicle may be able to charge at. 
-  if(carChoice==10)
+  if(carChoice==10)//These are the rates for the Chevy Bolt.
   {    
     bestRate = 3.33;
     worstRate = 0.454;    
   }
-  else if(carChoice==11)
+  else if(carChoice==11)//These are the rates for the GMC Hummer.
   {
     bestRate = 10; 
     worstRate = 0.5;
   }
-  else if(carChoice==12)
+  else if(carChoice==12)//These are the rates for the Mustang Mach-E.
   {
     bestRate = 6.1;
     worstRate = 0.5;
   }
-  else
+  else //These are the rates for all Tesla models. 
   {
     bestRate = 15.0;
     worstRate = 0.416;    
