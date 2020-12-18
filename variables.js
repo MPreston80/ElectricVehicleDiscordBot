@@ -9,10 +9,11 @@ class EV{
         this.teslaXPerform = 305;
         this.teslaXLRP = 351;
         this.bolt = 259;
-        this.leaf = 150;
         this.teslaSPlaid = 520;
         this.teslaYLR = 315;
         this.teslaYPerform = 291;
+        this.mustangMachE = 300;
+        this.hummer = 350;
     }
 }
 

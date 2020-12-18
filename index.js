@@ -57,17 +57,27 @@ function myFunc(){
 //getChargeTime function makes an approximation of the time needed to charge the EV during the trip, based on the model of car. 
 function getChargeTime(){  
   var distToUse = recordChargeTime[0];
-  var worstRate;
-  var bestRate;
-  if(carChoice==10||carChoice==11)
+  var worstRate; //A slower rate for charging at level 1 stations. 
+  var bestRate; //Fastest rate the vehicle may be able to charge at. 
+  if(carChoice==10)
   {    
-    bestRate = 2.85;
-    worstRate = 2.5;    
+    bestRate = 3.33;
+    worstRate = 0.454;    
+  }
+  else if(carChoice==11)
+  {
+    bestRate = 10; 
+    worstRate = 0.5;
+  }
+  else if(carChoice==12)
+  {
+    bestRate = 6.1;
+    worstRate = 0.5;
   }
   else
   {
     bestRate = 15.0;
-    worstRate = 4.06;    
+    worstRate = 0.416;    
   }  
   timeArr.push(distToUse/bestRate);
   timeArr.push(distToUse/worstRate);
@@ -129,7 +139,8 @@ bot.on('message', message=>{ //On method listens for when message event is fired
            \n 8. Tesla Model Y Long Range\
            \n 9. Tesla Model Y Performance\
            \n 10. Chevrolet Bolt\
-           \n 11. Nissan Leaf");            
+           \n 11. GMC Hummer EV\
+           \n 12. Ford Mustang Mach-E");            
          }
                    
          if(counter==3)
@@ -185,8 +196,12 @@ bot.on('message', message=>{ //On method listens for when message event is fired
               rangeArr.push(car.bolt);
               break;
               case '11':
-              range = car.leaf;
-              rangeArr.push(car.leaf);
+              range = car.hummer;
+              rangeArr.push(car.hummer);
+              break;
+              case '12':
+              range = car.mustangMachE;
+              rangeArr.push(car.mustangMachE);
               break;
             default:  //Default case for any input that isn't a number between 1 and 8. 
              message.reply("You didn't select a valid number.");
@@ -206,7 +221,8 @@ bot.on('message', message=>{ //On method listens for when message event is fired
             \n 8. Tesla Model Y Long Range\
             \n 9. Tesla Model Y Performance\
             \n 10. Chevrolet Bolt\
-            \n 11. Nissan Leaf");
+            \n 11. GMC Hummer EV\
+            \n 12. Ford Mustang Mach-E");
           }
 
           else  
@@ -333,8 +349,7 @@ bot.on('message', message=>{ //On method listens for when message event is fired
                  return;
                }
                else{ //If level 3 stations were found. 
-                 message.reply("There are " + numStations + " charging stations along your route.");   
-               console.log("This is the value for carChoice: " + carChoice);  
+                 message.reply("There are " + numStations + " charging stations along your route.");    
                for(var i = 0; i < numStations; i++) 
                { 
                   var obj = chargingStations[i]; 
@@ -344,7 +359,7 @@ bot.on('message', message=>{ //On method listens for when message event is fired
                   town = obj.AddressInfo.Town; 
                   title = obj.AddressInfo.Title;
                   st = obj.AddressInfo.StateOrProvince;
-                  if((title.includes("Tesla")||title.includes("Supercharger"))&&(carChoice==10||carChoice==11))
+                  if((title.includes("Tesla")||title.includes("Supercharger"))&&(carChoice==10||carChoice==11||carChoice==12))
                   continue;  
                   var coords = new Object(); 
                   coords.latitude = lat; 
@@ -435,6 +450,7 @@ bot.on('message', message=>{ //On method listens for when message event is fired
                message.reply("You need to stop at "+ stopsLen + " electric vehicle charging stations.");  //Let user know how many stations they need to stop at. 
                message.reply("For this model of electric vehicle, the best case time spent charging during the trip is: " + timeArr[0].toFixed(1) + " minutes. \
                \nThe worst case would be: " + timeArr[1].toFixed(1) + " minutes. \
+               \n DISCLAIMER! The best case and worst case are highly unlikely. Charge times will likely skew towards the best-case value. \
                \nFor multi-day trips, charging overnight at destination chargers could significantly reduce the wait time.");           
               for(var f = 0;f<stopsLen;f++)//For every index in the stops array
               {
